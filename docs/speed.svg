@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="380" viewBox="0 0 760 380" font-family="-apple-system,PingFang SC,Helvetica,sans-serif">
+<rect width="760" height="380" fill="#fcfcfb"/>
+<text x="24" y="34" font-size="18" font-weight="600" fill="#0b0b0b">发一条微信要多久：时间花在哪里</text>
+<text x="24" y="56" font-size="13" fill="#52514e">从 iPhone 主屏到发送成功 · 只粘贴不打字 · 单次运行 · 单位：秒</text>
+<rect x="24" y="68" width="12" height="12" rx="2" fill="#2a78d6"/><text x="42" y="79" font-size="12" fill="#52514e">模型思考</text>
+<rect x="120" y="68" width="12" height="12" rx="2" fill="#eb6834"/><text x="138" y="79" font-size="12" fill="#52514e">手机操作（mirroir）</text>
+<rect x="324" y="68" width="12" height="12" rx="2" fill="#1baf7a"/><text x="342" y="79" font-size="12" fill="#52514e">启动 + 剪贴板同步</text>
+<line x1="130.0" y1="90" x2="130.0" y2="328" stroke="#e4e3df"/><text x="130.0" y="344" font-size="11" fill="#52514e" text-anchor="middle">0</text>
+<line x1="231.8181818181818" y1="90" x2="231.8181818181818" y2="328" stroke="#e4e3df"/><text x="231.8181818181818" y="344" font-size="11" fill="#52514e" text-anchor="middle">20</text>
+<line x1="333.6363636363636" y1="90" x2="333.6363636363636" y2="328" stroke="#e4e3df"/><text x="333.6363636363636" y="344" font-size="11" fill="#52514e" text-anchor="middle">40</text>
+<line x1="435.45454545454544" y1="90" x2="435.45454545454544" y2="328" stroke="#e4e3df"/><text x="435.45454545454544" y="344" font-size="11" fill="#52514e" text-anchor="middle">60</text>
+<line x1="537.2727272727273" y1="90" x2="537.2727272727273" y2="328" stroke="#e4e3df"/><text x="537.2727272727273" y="344" font-size="11" fill="#52514e" text-anchor="middle">80</text>
+<line x1="639.090909090909" y1="90" x2="639.090909090909" y2="328" stroke="#e4e3df"/><text x="639.090909090909" y="344" font-size="11" fill="#52514e" text-anchor="middle">100</text>
+<text x="120" y="120.0" font-size="13" fill="#0b0b0b" text-anchor="end">固定路线 wxsend</text>
+<rect x="130" y="100" width="94.72727272727273" height="30" fill="#eb6834"><title>固定路线 wxsend · 手机操作（mirroir）: 19 秒</title></rect>
+<text x="177.36363636363637" y="119.0" font-size="11" fill="#fff" text-anchor="middle">19</text>
+<rect x="226.72727272727275" y="100" width="18.363636363636363" height="30" fill="#1baf7a"><title>固定路线 wxsend · 启动 + 剪贴板同步: 4 秒</title></rect>
+<text x="253.09090909090912" y="120.0" font-size="13" font-weight="600" fill="#0b0b0b">23 秒</text>
+<text x="120" y="168.0" font-size="13" fill="#0b0b0b" text-anchor="end">Terra 6.1</text>
+<rect x="130" y="148" width="176.1818181818182" height="30" fill="#2a78d6"><title>Terra 6.1 · 模型思考: 35 秒</title></rect>
+<text x="218.0909090909091" y="167.0" font-size="11" fill="#fff" text-anchor="middle">35</text>
+<rect x="308.1818181818182" y="148" width="89.63636363636364" height="30" fill="#eb6834"><title>Terra 6.1 · 手机操作（mirroir）: 18 秒</title></rect>
+<text x="353.0" y="167.0" font-size="11" fill="#fff" text-anchor="middle">18</text>
+<rect x="399.8181818181818" y="148" width="33.63636363636363" height="30" fill="#1baf7a"><title>Terra 6.1 · 启动 + 剪贴板同步: 7 秒</title></rect>
+<text x="441.45454545454544" y="168.0" font-size="13" font-weight="600" fill="#0b0b0b">60 秒</text>
+<text x="120" y="216.0" font-size="13" fill="#0b0b0b" text-anchor="end">Luna 6</text>
+<rect x="130" y="196" width="232.18181818181816" height="30" fill="#2a78d6"><title>Luna 6 · 模型思考: 46 秒</title></rect>
+<text x="246.09090909090907" y="215.0" font-size="11" fill="#fff" text-anchor="middle">46</text>
+<rect x="364.18181818181813" y="196" width="89.63636363636364" height="30" fill="#eb6834"><title>Luna 6 · 手机操作（mirroir）: 18 秒</title></rect>
+<text x="408.99999999999994" y="215.0" font-size="11" fill="#fff" text-anchor="middle">18</text>
+<rect x="455.81818181818176" y="196" width="18.363636363636363" height="30" fill="#1baf7a"><title>Luna 6 · 启动 + 剪贴板同步: 4 秒</title></rect>
+<text x="482.18181818181813" y="216.0" font-size="13" font-weight="600" fill="#0b0b0b">68 秒</text>
+<text x="120" y="264.0" font-size="13" fill="#0b0b0b" text-anchor="end">Sol 6.2</text>
+<rect x="130" y="244" width="318.72727272727275" height="30" fill="#2a78d6"><title>Sol 6.2 · 模型思考: 63 秒</title></rect>
+<text x="289.3636363636364" y="263.0" font-size="11" fill="#fff" text-anchor="middle">63</text>
+<rect x="450.72727272727275" y="244" width="160.9090909090909" height="30" fill="#eb6834"><title>Sol 6.2 · 手机操作（mirroir）: 32 秒</title></rect>
+<text x="531.1818181818182" y="263.0" font-size="11" fill="#fff" text-anchor="middle">32</text>
+<rect x="613.6363636363636" y="244" width="23.454545454545457" height="30" fill="#1baf7a"><title>Sol 6.2 · 启动 + 剪贴板同步: 5 秒</title></rect>
+<text x="645.0909090909091" y="264.0" font-size="13" font-weight="600" fill="#0b0b0b">100 秒</text>
+<text x="120" y="312.0" font-size="13" fill="#0b0b0b" text-anchor="end">Astra 6.2</text>
+<rect x="130" y="292" width="405.2727272727273" height="30" fill="#2a78d6"><title>Astra 6.2 · 模型思考: 80 秒</title></rect>
+<text x="332.6363636363636" y="311.0" font-size="11" fill="#fff" text-anchor="middle">80</text>
+<rect x="537.2727272727273" y="292" width="74.36363636363636" height="30" fill="#eb6834"><title>Astra 6.2 · 手机操作（mirroir）: 15 秒</title></rect>
+<text x="574.4545454545454" y="311.0" font-size="11" fill="#fff" text-anchor="middle">15</text>
+<rect x="613.6363636363636" y="292" width="23.454545454545457" height="30" fill="#1baf7a"><title>Astra 6.2 · 启动 + 剪贴板同步: 5 秒</title></rect>
+<text x="645.0909090909091" y="312.0" font-size="13" font-weight="600" fill="#0b0b0b">100 秒</text>
+</svg>

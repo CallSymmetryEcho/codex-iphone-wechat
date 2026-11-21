@@ -1,0 +1,6 @@
+name: wechat-back
+app: WeChat
+description: WeChat reopened inside a chat - tap the back chevron and expect the chat list.
+steps:
+  - tap: @25,97
+  - wait_for: "Weixin" timeout: 2

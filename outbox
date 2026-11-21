@@ -1,0 +1,14 @@
+#!/bin/zsh
+# Prepare a message on the Mac: log it, put it on the clipboard, wait for Universal Clipboard to reach the iPhone.
+# Then on the phone only paste (Cmd+V) — never type: iOS autocorrect rewrites typed text.
+# Usage: ./outbox "<chat name>" "<text>"
+set -e
+[[ $# -eq 2 && -n "$2" ]] || { echo 'usage: ./outbox "<chat name>" "<text>"' >&2; exit 2; }
+log="${0:A:h}/chat-log/outbox.md"
+mkdir -p "${log:h}"
+[[ -f "$log" ]] || print -r -- "# Messages prepared on this Mac (pasted to the iPhone)" > "$log"
+print -r -- "- $(date '+%Y-%m-%d %H:%M:%S') → **$1**: $2" >> "$log"
+print -rn -- "$2" | pbcopy
+[[ "$(pbpaste)" == "$2" ]] || { echo "clipboard write failed" >&2; exit 1; }
+sleep 1.5   # ponytail: fixed wait for Universal Clipboard (mirroir uses the same 1.5 s); raise if pastes come up stale
+echo "ready: on the iPhone tap the input field, press Cmd+V, check the text, then Return"

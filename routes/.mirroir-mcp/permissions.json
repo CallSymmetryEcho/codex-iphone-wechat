@@ -1,0 +1,5 @@
+{
+  "allow": ["tap", "press_key", "press_home", "reset_app", "swipe"],
+  "deny": ["type_text", "launch_app", "spotlight", "open_url", "set_network", "shake"],
+  "blockedApps": ["Wallet", "Settings", "PayPal", "Venmo", "Cash App", "Zelle", "Chase", "Bank of America", "Alipay", "支付宝"]
+}

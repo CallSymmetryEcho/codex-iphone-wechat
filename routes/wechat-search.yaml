@@ -1,0 +1,11 @@
+name: wechat-search
+app: WeChat
+description: From the chat list, paste the contact name (already on the clipboard) into search and open the first result.
+# 100,190 = first result row (one section header, e.g. Contacts or Features, sits above it).
+steps:
+  - tap: "Search"
+  - press_key: "v+command"
+  - wait_for: "${CONTACT}"
+  - tap: @100,190
+  - wait_for: "${CONTACT}"
+  - assert_not_visible: "Internet search results"

@@ -1,0 +1,8 @@
+name: wechat-home
+app: WeChat
+description: Home screen (Cmd+1, faster than press_home), then WeChat from the Dock; passes only when the chat list (title Weixin) is showing.
+# Points in the 355x782 iPhone Mirroring window. 214,716 = WeChat in the Dock.
+steps:
+  - press_key: "1+command"
+  - tap: @214,716
+  - wait_for: "Weixin" timeout: 2

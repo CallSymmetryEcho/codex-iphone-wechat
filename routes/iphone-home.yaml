@@ -1,0 +1,5 @@
+name: iphone-home
+app: Home
+description: Home screen via the iPhone Mirroring shortcut Cmd+1.
+steps:
+  - press_key: "1+command"
