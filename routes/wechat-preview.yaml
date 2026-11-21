@@ -1,0 +1,5 @@
+name: wechat-preview
+app: WeChat
+description: Wait for the image preview to appear.
+steps:
+  - wait_for: "Send"

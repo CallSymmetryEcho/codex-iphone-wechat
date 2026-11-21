@@ -1,0 +1,6 @@
+name: wechat-query
+app: WeChat
+description: Paste the contact name into the focused search box and wait for results.
+steps:
+  - wait_for: "${CONTACT}"
+  - wait_for: "Internet search results"

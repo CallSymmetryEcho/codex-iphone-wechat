@@ -1,14 +1,24 @@
 #!/bin/zsh
-# Prepare a message on the Mac: log it, put it on the clipboard, wait for Universal Clipboard to reach the iPhone.
+# Prepare what goes to the iPhone on the Mac: log it, put it on the clipboard, wait for Universal Clipboard.
 # Then on the phone only paste (Cmd+V) — never type: iOS autocorrect rewrites typed text.
 # Usage: ./outbox "<chat name>" "<text>"
+#        ./outbox "<chat name>" --image <file.png|jpg>
 set -e
-[[ $# -eq 2 && -n "$2" ]] || { echo 'usage: ./outbox "<chat name>" "<text>"' >&2; exit 2; }
+usage() { echo 'usage: ./outbox "<chat name>" "<text>"  |  ./outbox "<chat name>" --image <file>' >&2; exit 2; }
+[[ $# -ge 2 && -n "$2" ]] || usage
 log="${0:A:h}/chat-log/outbox.md"
 mkdir -p "${log:h}"
-[[ -f "$log" ]] || print -r -- "# Messages prepared on this Mac (pasted to the iPhone)" > "$log"
-print -r -- "- $(date '+%Y-%m-%d %H:%M:%S') → **$1**: $2" >> "$log"
-print -rn -- "$2" | pbcopy
-[[ "$(pbpaste)" == "$2" ]] || { echo "clipboard write failed" >&2; exit 1; }
+[[ -f "$log" ]] || print -r -- "# What this Mac prepared for the iPhone (pasted, never typed)" > "$log"
+if [[ "$2" == --image ]]; then
+  [[ -f "$3" ]] || usage
+  img="${3:A}"
+  case "${img:e:l}" in png) cls=PNGf;; jpg|jpeg) cls=JPEG;; *) echo "png or jpg only" >&2; exit 2;; esac
+  osascript -e "set the clipboard to (read (POSIX file \"$img\") as «class $cls»)"
+  print -r -- "- $(date '+%Y-%m-%d %H:%M:%S') → **$1**: [image] ${img:t}" >> "$log"
+else
+  print -r -- "- $(date '+%Y-%m-%d %H:%M:%S') → **$1**: $2" >> "$log"
+  print -rn -- "$2" | pbcopy
+  [[ "$(pbpaste)" == "$2" ]] || { echo "clipboard write failed" >&2; exit 1; }
+fi
 sleep 1.5   # ponytail: fixed wait for Universal Clipboard (mirroir uses the same 1.5 s); raise if pastes come up stale
-echo "ready: on the iPhone tap the input field, press Cmd+V, check the text, then Return"
+echo "ready: on the iPhone tap the input field, press Cmd+V, check it, then send"

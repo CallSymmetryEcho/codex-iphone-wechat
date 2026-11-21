@@ -1,0 +1,80 @@
+#!/bin/zsh
+# WeChat functions for a model to call through iPhone Mirroring. Each is a deterministic mirroir replay
+# (routes/*.yaml), no typing on the phone. The model reads the screen and decides which one fits.
+# Usage: ./wx open "<contact>"                    find a person: Home → WeChat → search → open the chat
+#        ./wx list                                 get to the WeChat chat list
+#        ./wx send "<text>" [--to "<contact>"]     in the OPEN chat: paste, check, Return (--to: check the title first)
+#        ./wx image <png|jpg> [--to "<contact>"]   in the OPEN chat: paste the image, tap Send on the preview
+# A failed paste is retried once (the input box is emptied first, so nothing doubles).
+# A send action can have an uncertain outcome. Check the chat before retrying.
+self="${0:A}"; cd "${self:h}"; zmodload zsh/datetime
+usage() { sed -n 4,7p "$self" | sed 's/^# //' >&2; exit 2; }
+export PATH=$HOME/.local/bin:$PATH
+M=(${=MIRROIR:-$(command -v mirroir-mcp || echo npx -y mirroir-mcp@0.50.3)})   # brew install jfarcand/tap/mirroir-mcp skips the npx start-up
+mkdir -p chat-log
+step() {  # step <route> : replay one route, log its output, return its verdict
+  print -r -- "== $(date '+%F %T') $1" >> chat-log/route.log
+  (cd routes && CONTACT="$CONTACT" MSG_CHECK="$MSG_CHECK" $M test --confirm-destructive --timeout 6 "$1.yaml") >> chat-log/route.log 2>&1
+}
+done_in() { printf "%s in %.1fs\n" "$1" $(( EPOCHREALTIME - t0 )); exit 0; }
+to_list() { step wechat-home || step wechat-back || { echo "not on the WeChat chat list" >&2; exit 1; } }
+check_title() {
+  tools/paste --front || exit 1
+  local title="$(tools/boxocr 64 82 227 28)"
+  [[ "$title" == "$CONTACT" ]] || { echo "could not verify chat title: $CONTACT" >&2; exit 1; }
+}
+check_to() {
+  (( $# )) || return 0
+  [[ $# == 2 && "$1" == --to && -n "$2" ]] || usage
+  CONTACT="$2"; check_title
+}
+paste_checked() {  # paste, then OCR only the input box: older bubbles with the same words must not count
+  tools/paste --front && step wechat-focus-input || return 1
+  tools/paste --text "$text" || return 1
+  local top=709 box="" attempt
+  (( ${#lines} > 1 || ${#text} > 22 )) && top=699
+  (( ${#text} > 55 )) && top=681
+  for attempt in {1..10}; do
+    sleep 0.7
+    box="$(tools/boxocr 49 "$top" 227 "$((743-top))")" || return 1
+    print -r -- "   input box: ${box//$'\n'/ | }" >> chat-log/route.log
+    if (( ${#text} <= 22 )); then
+      [[ "${box//[[:space:]]/}" == "${text//[[:space:]]/}" ]] && return 0
+    else
+      [[ "${box//[[:space:]]/}" == *"${MSG_CHECK//[[:space:]]/}"* ]] && return 0
+    fi
+  done
+  return 1
+}
+paste_blocked() { step wechat-paste-prompt && echo "iOS is asking \"Allow Paste\" on the phone. Tap Allow Paste, or set Settings > WeChat > Paste from Other Apps > Allow." >&2; }
+[[ -x tools/boxocr ]] || swiftc -O tools/boxocr.swift -o tools/boxocr || exit 1
+[[ -x tools/paste ]] || swiftc -O tools/paste.swift -o tools/paste || exit 1
+t0=$EPOCHREALTIME
+cmd="$1"; shift 2>/dev/null
+case "$cmd" in
+  list) [[ $# -eq 0 ]] || usage; to_list; done_in "on the chat list";;
+  open) [[ $# -eq 1 && -n "$1" ]] || usage
+        to_list; CONTACT="$1"
+        if step wechat-visible-chat; then
+          check_title
+          done_in "chat with $1 open"
+        fi
+        step wechat-search || exit 1
+        ./outbox "search" "$1" >/dev/null || exit 1
+        tools/paste --text "$CONTACT" && step wechat-query || { echo "could not open the chat with $1" >&2; exit 1; }
+        [[ "$(tools/boxocr 58 171 220 37)" == "$CONTACT" ]] || { echo "first result does not match $CONTACT" >&2; exit 1; }
+        step wechat-open-result || exit 1
+        check_title
+        done_in "chat with $1 open";;
+  send) [[ -n "$1" ]] || usage; text="$1"; shift; check_to "$@"
+        lines=(${(f)text}); MSG_CHECK="${lines[-1][1,10]}"   # ponytail: OCR-check the start of the LAST line; long text scrolls its first lines out of the box
+        ./outbox "${CONTACT:-open chat}" "$text" >/dev/null || exit 1
+        paste_checked || { sleep 1.5; paste_checked; } || { paste_blocked; echo "text not in the input box; NOT sent" >&2; exit 1; }
+        tools/paste --front && step wechat-return || { echo "Return outcome unknown; inspect chat before retry" >&2; exit 1; }
+        done_in "Return pressed; verify chat";;
+  image) [[ -f "$1" ]] || usage; img="$1"; shift; check_to "$@"
+        ./outbox "${CONTACT:-open chat}" --image "$img" >/dev/null || exit 1
+        tools/paste --front && step wechat-focus-input && tools/paste --image && step wechat-preview && tools/paste --front && step wechat-send-image || { echo "image outcome unknown; inspect preview or chat before retry" >&2; exit 1; }
+        done_in "image sent";;
+  *) usage;;
+esac

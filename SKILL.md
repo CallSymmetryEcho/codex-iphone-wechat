@@ -1,33 +1,34 @@
 ---
 name: codex-iphone-wechat
-description: Send WeChat messages, and do other tasks, on the user's real iPhone through macOS iPhone Mirroring and the mirroir MCP tools. Use when the user asks to message someone on WeChat (微信) or to operate their iPhone. Fast fixed route (wxsend), and text is always pasted, never typed.
+description: Send WeChat messages and images, and do other tasks, on the user's real iPhone through macOS iPhone Mirroring and the mirroir MCP tools. Use when the user asks to message someone on WeChat (微信) or to operate their iPhone. Fixed steps run as fast deterministic scripts; you handle the flexible steps. Text and images are always pasted, never typed.
 ---
 
 # iPhone WeChat through iPhone Mirroring
 
-The scripts sit in this skill's folder (the one this SKILL.md is in). Run them from there.
+You are the planner. Hand every **fixed** step to the scripts in this skill's folder (they replay recorded routes in seconds, no tokens), and use the mirroir MCP tools only for the **flexible** steps: anything the scripts cannot see or decide (an emoji-only contact name, an image preview sheet, an unexpected dialog, choosing what to reply). Run the scripts from this folder.
 
-## Send a WeChat message: use the fixed route first
+## Scripts (fixed steps)
 
-```bash
-./wxsend "<contact name exactly as WeChat shows it>" "<message>"
-```
+| Command | Does | Typical time |
+|---|---|---|
+| `./wx open "<contact>"` | open the chat after checking the result row and title | ~18 s |
+| `./wx list` | get to the WeChat chat list | ~6 s |
+| `./wx send "<text>" [--to "<contact>"]` | paste into the open chat, check its input box, press Return | ~6–10 s in observed successful runs |
+| `./wx image <file> [--to "<contact>"]` | paste an image and tap Send on the preview | varies |
+| `./outbox "<chat>" "<text>"` | log the text on the Mac and put it on the clipboard | 1.5 s |
+| `./outbox "<chat>" --image <file>` | same for a PNG/JPG image | 1.5 s |
 
-- It replays deterministic mirroir routes (`routes/*.yaml`) with no model in the loop: about 23 s.
-- Exit 0 prints `sent to <contact> in <s>s`. Any other exit means **nothing was sent**; the reason is printed and the steps are in `chat-log/route.log`. Do not retry in a loop; tell the user what failed.
-- Every message goes into `chat-log/outbox.md` on the Mac.
-- Before sending, make sure the user approved this contact and this exact text. A message is not something to send on your own initiative.
-- A contact whose name is only emoji cannot be OCR-checked by wxsend: use the mirroir tools below and check the chat title in a screenshot.
+Raise iPhone Mirroring before every send. After a send action, verify the outgoing bubble. Inspect the chat before retrying any interrupted action. Read `chat-log/route.log` for the input box OCR and route errors. On a paste permission prompt, ask the user to allow the paste.
 
-## Anything else on the phone: the mirroir MCP tools, paste-only
+Use the contact name exactly as WeChat shows it. For an emoji-only name, run `./wx list`, select the contact visually and check its title in a screenshot before using the open-chat commands.
 
-1. **Never type on the phone.** `type_text` makes iOS autocorrect rewrite text (capitals, word swaps). Instead:
-   - `./outbox "<where it goes>" "<text>"` puts the text on the clipboard (and logs it), waits for Universal Clipboard;
-   - tap the field, then `press_key` key `v` with modifier `command` (⌘V);
-   - read the screen and check the text before pressing Return.
-2. Read the screen as text when you can: `describe_screen` with `omit_screenshot: true` is faster and much smaller.
-3. Do several known steps at once with `run_steps` instead of one tool call per step.
-4. Before sending, posting, buying or deleting, confirm with the user unless the request already names the exact item and text.
-5. If a tap is refused because another window covers the mirror, tell the user to move that window or the iPhone Mirroring window; do not retry.
+## Flexible steps (mirroir tools), paste-only
+
+1. **Never type on the phone** (`type_text` is disabled: iOS autocorrect rewrites typed text). To enter text or an image: `./outbox …`, tap the input field, then `press_key` key `v` with modifier `command`.
+2. An image pasted into a WeChat chat shows a preview sheet: check it is the right picture, then tap its **Send** button.
+3. Before each Return/Send: read the screen and check the chat title and the exact text.
+4. Read the screen as text when you can (`describe_screen` with `omit_screenshot: true`); take a `screenshot` only when you need to see pictures or emoji.
+5. Sending, posting, buying, deleting: only what the user approved (contact + exact text/file). Never on your own initiative.
+6. A tap refused because another window covers the mirror: tell the user to move that window; do not retry.
 
 Setup and troubleshooting: README.md in this folder.

@@ -1,0 +1,5 @@
+name: wechat-paste-prompt
+app: WeChat
+description: Pass if iOS is asking whether WeChat may paste from the Mac.
+steps:
+  - assert_visible: "Allow Paste"

@@ -1,0 +1,14 @@
+先读当前文件夹里的 SKILL.md，按里面的分工做：固定步骤用脚本（./wx、./outbox），灵活步骤用 mirroir 的 MCP 工具。
+任务：在我 iPhone 的微信里，给 File Transfer（文件传输助手）依次发两条：
+1. 图片 docs/speed.png
+2. 下面这段文字（原样，包括换行）：
+给你看个我刚做的小东西：用 Codex 通过 Mac 的 iPhone 镜像操作手机发微信，现在 23 秒发一条，全程不用手打字。上面是几个模型的速度对比，详细数据和说明在这里：https://github.com/CallSymmetryEcho/codex-iphone-wechat
+
+安装（Mac 要 macOS 15 以上，iPhone 镜像能连上）：
+1. git clone https://github.com/CallSymmetryEcho/codex-iphone-wechat ~/.codex/skills/codex-iphone-wechat
+2. codex mcp add mirroir -- npx -y mirroir-mcp@0.50.3
+3. npx -y mirroir-mcp@0.50.3 doctor（按提示给终端开「辅助功能」和「屏幕录制」）
+
+然后跟 Codex 说「给 xxx 发微信：……」就行。
+
+这两条我已经批准发给 File Transfer，不用再问我；对象或内容不对就不要发，绝对不要发给其他任何人。发完读屏确认两条都在对话里。最后用几句话报告：成功或失败；每一步用的是脚本还是 mirroir 工具；卡在哪里。

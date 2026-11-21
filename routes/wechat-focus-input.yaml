@@ -1,0 +1,5 @@
+name: wechat-focus-input
+app: WeChat
+description: Focus the chat input field.
+steps:
+  - tap: @160,726

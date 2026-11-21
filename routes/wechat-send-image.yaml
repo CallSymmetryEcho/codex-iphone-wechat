@@ -1,0 +1,5 @@
+name: wechat-send-image
+app: WeChat
+description: Confirm the image preview.
+steps:
+  - tap: "Send"

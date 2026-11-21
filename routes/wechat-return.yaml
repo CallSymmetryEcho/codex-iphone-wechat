@@ -1,0 +1,6 @@
+name: wechat-return
+app: WeChat
+description: Refocus the verified draft, then submit exactly once.
+steps:
+  - tap: @158,727
+  - press_key: "return"

@@ -1,0 +1,6 @@
+name: wechat-open-result
+app: WeChat
+description: Open the first result after the caller checked that row.
+steps:
+  - tap: @100,190
+  - assert_not_visible: "Internet search results"

@@ -1,0 +1,5 @@
+name: wechat-visible-chat
+app: WeChat
+description: Open a named chat already visible in the chat list.
+steps:
+  - tap: "${CONTACT}"

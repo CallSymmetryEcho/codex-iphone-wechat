@@ -3,3 +3,5 @@ bench/results/
 mirroir-test-results/
 routes/mirroir-test-results/
 .DS_Store
+tools/boxocr
+tools/paste
