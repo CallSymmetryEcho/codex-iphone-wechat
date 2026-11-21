@@ -5,7 +5,7 @@
 #        ./wx list                                 get to the WeChat chat list
 #        ./wx send "<text>" [--to "<contact>"]     in the OPEN chat: paste, check, Return (--to: check the title first)
 #        ./wx image <png|jpg> [--to "<contact>"]   in the OPEN chat: paste the image, tap Send on the preview
-# A failed paste is retried once (the input box is emptied first, so nothing doubles).
+# Paste once and poll the input box while Universal Clipboard syncs.
 # A send action can have an uncertain outcome. Check the chat before retrying.
 self="${0:A}"; cd "${self:h}"; zmodload zsh/datetime
 usage() { sed -n 4,7p "$self" | sed 's/^# //' >&2; exit 2; }
@@ -34,11 +34,15 @@ paste_checked() {  # paste, then OCR only the input box: older bubbles with the 
   local top=709 box="" attempt
   (( ${#lines} > 1 || ${#text} > 22 )) && top=699
   (( ${#text} > 55 )) && top=681
+  local match_full=false
+  if (( ${#text} <= 22 )) || [[ ( "$text" == http://* || "$text" == https://* ) && "$text" != *[[:space:]]* ]]; then
+    match_full=true
+  fi
   for attempt in {1..10}; do
     sleep 0.7
     box="$(tools/boxocr 49 "$top" 227 "$((743-top))")" || return 1
     print -r -- "   input box: ${box//$'\n'/ | }" >> chat-log/route.log
-    if (( ${#text} <= 22 )); then
+    if [[ "$match_full" == true ]]; then
       [[ "${box//[[:space:]]/}" == "${text//[[:space:]]/}" ]] && return 0
     else
       [[ "${box//[[:space:]]/}" == *"${MSG_CHECK//[[:space:]]/}"* ]] && return 0
@@ -69,9 +73,10 @@ case "$cmd" in
   send) [[ -n "$1" ]] || usage; text="$1"; shift; check_to "$@"
         lines=(${(f)text}); MSG_CHECK="${lines[-1][1,10]}"   # ponytail: OCR-check the start of the LAST line; long text scrolls its first lines out of the box
         ./outbox "${CONTACT:-open chat}" "$text" >/dev/null || exit 1
-        paste_checked || { sleep 1.5; paste_checked; } || { paste_blocked; echo "text not in the input box; NOT sent" >&2; exit 1; }
+        paste_checked || { paste_blocked; echo "Could not verify the draft. Inspect the input box before continuing." >&2; exit 1; }
         tools/paste --front && step wechat-return || { echo "Return outcome unknown; inspect chat before retry" >&2; exit 1; }
-        done_in "Return pressed; verify chat";;
+        sleep 1.5  # the outgoing bubble may appear after the first mirrored frame
+        done_in "Return pressed once; check for a new outgoing bubble";;
   image) [[ -f "$1" ]] || usage; img="$1"; shift; check_to "$@"
         ./outbox "${CONTACT:-open chat}" --image "$img" >/dev/null || exit 1
         tools/paste --front && step wechat-focus-input && tools/paste --image && step wechat-preview && tools/paste --front && step wechat-send-image || { echo "image outcome unknown; inspect preview or chat before retry" >&2; exit 1; }

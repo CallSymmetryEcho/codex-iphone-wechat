@@ -1,6 +1,5 @@
 name: wechat-return
 app: WeChat
-description: Refocus the verified draft, then submit exactly once.
+description: Press plain Return once in the field already focused for paste.
 steps:
-  - tap: @158,727
   - press_key: "return"

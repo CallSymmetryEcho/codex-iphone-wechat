@@ -18,7 +18,7 @@ You are the planner. Hand every **fixed** step to the scripts in this skill's fo
 | `./outbox "<chat>" "<text>"` | log the text on the Mac and put it on the clipboard | 1.5 s |
 | `./outbox "<chat>" --image <file>` | same for a PNG/JPG image | 1.5 s |
 
-Raise iPhone Mirroring before every send. After a send action, verify the outgoing bubble. Inspect the chat before retrying any interrupted action. Read `chat-log/route.log` for the input box OCR and route errors. On a paste permission prompt, ask the user to allow the paste.
+Raise iPhone Mirroring before every send. Paste once, keep the verified field focused, and use plain Return once. Allow the mirror to refresh and verify a new outgoing bubble. If the draft remains, inspect it. When the emoji panel shows a green Send button, tap it only after checking the draft and confirming there is no new bubble. Inspect the chat before retrying any interrupted action. Read `chat-log/route.log` for the input box OCR and route errors. On a paste permission prompt, ask the user to allow the paste.
 
 Use the contact name exactly as WeChat shows it. For an emoji-only name, run `./wx list`, select the contact visually and check its title in a screenshot before using the open-chat commands.
 
